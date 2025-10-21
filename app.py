@@ -6,7 +6,7 @@ from modules import M1_discovery, M2_design, M3_delivery, M4_qa
 st.set_page_config(page_title="Automation Architect AI", page_icon="🤖", layout="wide")
 st.title("🤖 Automation Architect AI")
 
-GOOGLE_API_KEY = "AIzaSyAi93gAzIjbMHhM_i9aF-YFeALsMwYj7kM"
+GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=GOOGLE_API_KEY)
 
 tab_discovery, tab_design, tab_delivery, tab_qa = st.tabs([
