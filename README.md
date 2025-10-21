@@ -1,7 +1,5 @@
 # 🤖 Automation Architect AI
 
-![GIF do Projeto em Ação](URL_DO_SEU_GIF_AQUI)
-
 ## 🎯 Sobre o Projeto
 
 O **Automation Architect AI** é uma ferramenta de protótipo construída com Python, Streamlit e I.A. Generativa (Google Gemini), projetada para atuar como um co-piloto para Gestores de Projetos, Analistas de Requisitos e Consultores de Automação.
