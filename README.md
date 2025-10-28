@@ -4,18 +4,27 @@
 
 Uma ferramenta de I.A. construída com Python e Streamlit para atuar como um co-piloto para Gestores de Projetos, Analistas de Requisitos e Consultores de Automação.
 
+---
+
+### 🎥 Projeto em Ação (Exemplo)
+
+*(Substitua pela URL do seu GIF quando o tiver)*
+![GIF do Projeto em Ação](URL_DO_SEU_GIF_AQUI)
+
+
 ### 🎯 Sobre o Projeto
 
 O **Automation Architect AI** resolve um desafio central no desenvolvimento de projetos de automação e I.A.: a tradução de necessidades de negócio em artefatos técnicos claros e acionáveis. O objetivo é acelerar o ciclo de vida do projeto, desde a identificação de oportunidades até a criação de um backlog pronto para a equipe de desenvolvimento.
 
 ### ✨ Funcionalidades Principais
 
-A ferramenta guia o usuário através de um fluxo de trabalho de 4 etapas:
+A ferramenta guia o usuário através de um fluxo de trabalho de 5 etapas:
 
 1.  **💡 Discovery:** Analisa descrições de processos de negócio e identifica oportunidades de automação (RPA) e I.A. (Machine Learning).
 2.  **✍️ Design:** Transforma uma oportunidade em um blueprint técnico detalhado (esboço de PDD), descrevendo o fluxo do processo "To-Be".
 3.  **📄 Delivery:** Gera automaticamente os artefatos para a equipe de desenvolvimento Ágil: Épico, User Stories, Requisitos Não Funcionais (NFRs) e Critérios de Aceitação.
 4.  **🧪 QA & Testes:** Com base no mesmo blueprint, gera um plano de testes abrangente com cenários de caminho feliz, testes negativos e de exceção.
+5.  **🔄 Refinar:** Permite reutilizar e adaptar um PDD ou User Stories de um projeto anterior para um novo cenário com requisitos diferentes.
 
 ### 🛠️ Tecnologias Utilizadas
 
@@ -32,12 +41,21 @@ git clone [https://github.com/raphaelsalgueiro/Automation-Architect-AI.git](http
 cd Automation-Architect-AI
 ```
 
-**2. Instale as Dependências:**
+**2. Crie e Ative um Ambiente Virtual (Recomendado):**
+```bash
+python -m venv .venv
+# No Windows:
+.\.venv\Scripts\activate
+# No macOS/Linux:
+# source .venv/bin/activate
+```
+
+**3. Instale as Dependências:**
 ```bash
 pip install -r requirements.txt
 ```
 
-**3. Configure a Chave de API:**
+**4. Configure a Chave de API:**
 * Crie uma pasta chamada `.streamlit` na raiz do projeto.
 * Dentro dela, crie um arquivo chamado `secrets.toml`.
 * Adicione sua chave do Google AI neste arquivo, da seguinte forma:
@@ -45,7 +63,7 @@ pip install -r requirements.txt
     GOOGLE_API_KEY = "SUA_CHAVE_DE_API_VAI_AQUI"
     ```
 
-**4. Execute o Aplicativo:**
+**5. Execute o Aplicativo:**
 ```bash
 streamlit run app.py
 ```
