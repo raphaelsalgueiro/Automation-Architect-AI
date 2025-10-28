@@ -6,12 +6,6 @@ Uma ferramenta de I.A. construída com Python e Streamlit para atuar como um co-
 
 ---
 
-### 🎥 Projeto em Ação (Exemplo)
-
-*(Substitua pela URL do seu GIF quando o tiver)*
-![GIF do Projeto em Ação](URL_DO_SEU_GIF_AQUI)
-
-
 ### 🎯 Sobre o Projeto
 
 O **Automation Architect AI** resolve um desafio central no desenvolvimento de projetos de automação e I.A.: a tradução de necessidades de negócio em artefatos técnicos claros e acionáveis. O objetivo é acelerar o ciclo de vida do projeto, desde a identificação de oportunidades até a criação de um backlog pronto para a equipe de desenvolvimento.
