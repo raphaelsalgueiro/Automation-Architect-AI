@@ -27,19 +27,14 @@ def create_pdf_bytes(md_text):
         pdf.add_page()
         
         # 4. Escrever o texto
-        #    multi_cell() é como um text_area, ele quebra a linha automaticamente
-        #    Usamos encode/decode para garantir que o FPDF2 (baseado em Python)
-        #    lide corretamente com o texto que vem da IA.
-        
-        # Removemos o "markdown" pois o fpdf2 não o renderiza, apenas o texto.
-        # Isso é uma limitação, mas garante o funcionamento.
-        
         pdf.multi_cell(0, 5, md_text)
         
+        # --- INÍCIO DA CORREÇÃO ---
         # 5. Retornar os bytes
-        #    Usamos .output(dest='S') para string/bytes, mas precisamos
-        #    encodar para latin-1 para o Streamlit (um truque do FPDF2)
-        return pdf.output(dest='S').encode('latin-1')
+        #    Removemos o ".encode('latin-1')" que estava causando o erro.
+        #    O output(dest='S') já retorna os bytes necessários.
+        return pdf.output(dest='S')
+        # --- FIM DA CORREÇÃO ---
 
     except Exception as e:
         st.error(f"Erro ao gerar o PDF (fpdf2): {e}")
