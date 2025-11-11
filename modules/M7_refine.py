@@ -58,8 +58,8 @@ def run():
     records = get_history_records_cached()
 
     if not records:
-        st.info("Nenhum projeto encontrado no seu histórico (Google Sheets). Salve um projeto em outro módulo para vê-lo aqui.")
-        st.info("Se você acabou de salvar, aguarde 60 segundos para o cache atualizar ou clique em 'C' e 'Limpar cache'.")
+        st.info("Nenhum projeto encontrado no seu histórico. Salve um projeto em outro módulo para vê-lo aqui.")
+        st.info("Se você acabou de salvar, aguarde 60 segundos para o cache atualizar ou clique em 'Limpar cache'.")
     else:
         
         project_names = [
@@ -110,7 +110,7 @@ def run():
                     with st.spinner("Analisando o original e gerando o novo Documento de Governança..."):
                         
                         prompt = f"""
-                        Você é Raphael Souza, especialista em Governança de Projetos da DMS Logistics , focado em **Power Automate** e **Analysis**.
+                        Você é o especialista em Governança de Projetos da DMS Logistics , focado em **Power Automate** e **Analysis**.
                         Sua tarefa é gerar um NOVO "Documento de Governança Discovery-to-Delivery" completo, adaptado para um novo cenário (ex: um novo fornecedor ou processo).
 
                         Você receberá:

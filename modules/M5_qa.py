@@ -23,7 +23,6 @@ def run():
             
             with st.spinner("Elaborando o plano de testes..."):
                 
-                # O prompt "v2.0" já estava bom e incluía testes para o Analysis 
                 prompt = f"""
                 Você é um Engenheiro de QA (Quality Assurance) Sênior, especialista em automação de processos com **Power Automate** e **Analysis**.
                 Sua tarefa é criar um plano de testes (UAT) com base no PDD (Fluxo 'To-Be'), seguindo a estrutura da Seção 4 do documento de governança .

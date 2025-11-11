@@ -7,14 +7,12 @@ def run():
     st.header("💡 1. Diagnóstico (AS-IS)")
     st.write("O objetivo deste módulo é analisar material bruto (anotações, e-mails, atas) para mapear o Processo Atual (AS-IS) e as Regras de Negócio do cliente, focando 100% no problema, sem sugerir tecnologia.")
     
-    # --- MUDANÇA (INPUT 1) ---
     process_input = st.text_area(
         "Cole o material bruto do processo aqui (anotações de reunião, etc):", 
         height=250, 
         placeholder="Ex: Anotações da reunião com o cliente sobre o processo de faturamento..."
     )
 
-    # --- NOVO (INPUT 2) ---
     uploaded_files = st.file_uploader(
         "Ou anexe arquivos (PDF, DOCX, TXT) que o cliente enviou:",
         type=["pdf", "docx", "txt"],

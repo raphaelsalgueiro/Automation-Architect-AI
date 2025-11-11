@@ -70,7 +70,7 @@ def run():
                 current_date = st.session_state.get('current_date', 'Data não definida')
                 
                 prompt = f"""
-                Você é Raphael Souza, especialista em Governança de Projetos da DMS Logistics .
+                Você é o especialista em Governança de Projetos da DMS Logistics.
                 Sua tarefa é gerar um "Documento de Governança Discovery-to-Delivery" completo, profissional e formatado em Markdown, com base no template e nos 4 blocos de conteúdo fornecidos.
 
                 TAREFA 1 (IA GERADORA): Você deve LER os [Bloco 1: Diagnóstico] e [Bloco 2: Design] para entender o problema e a solução. Com base neles, você deve **ESCREVER** as seções:

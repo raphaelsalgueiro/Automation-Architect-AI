@@ -1,84 +1,66 @@
-# 🤖 Automation Architect AI
+# 🤖 Automation Architect AI (v4.0)
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://automation-architect-ai-emhu7fwq2hpyzs447qkep5.streamlit.app/)
 
-Uma ferramenta de I.A. construída com Python e Streamlit para atuar como um co-piloto para Gestores de Projetos, Analistas de Requisitos e Consultores de Automação, especializada no stack Power Automate e I.A.s customizadas.
+Uma ferramenta de I.A. (co-piloto) para Gestores de Projetos, Analistas de Requisitos e Desenvolvedores de Automação, especializada em acelerar o ciclo de vida "Discovery-to-Delivery" para a stack de **Power Automate** e **Analysis** (IA interna).
 
 ---
 
-### 🎯 Sobre o Projeto
+### ✨ Funcionalidades Principais (v4.0)
 
-O **Automation Architect AI** resolve um desafio central no desenvolvimento de projetos de automação e I.A.: a tradução de necessidades de negócio em artefatos técnicos claros e acionáveis.
+Esta ferramenta evoluiu de um simples gerador de documentos para um assistente inteligente com memória de longo prazo.
 
-A ferramenta guia o usuário por um fluxo de trabalho de ponta a ponta que espelha um processo de governança "Discovery-to-Delivery", desde o mapeamento do problema (AS-IS) até a geração de um documento de governança final e pronto para a equipe de desenvolvimento.
+* **Busca Inteligente no Histórico (Módulo 2):** Ao invés de sempre criar do zero, a ferramenta agora **verifica o histórico** (Google Sheets) por projetos similares. Se encontrar uma automação 80% compatível, ela sugere a **reutilização**, gerando um plano de adaptação (lógica do Módulo 7) automaticamente.
+* **Geração de Backlog por Função (Módulo 4):** A ferramenta entende a divisão de tarefas da equipe. O Módulo de Delivery agora gera Histórias de Usuário separadas para o **Desenvolvedor Power Automate** e para o **Engenheiro do Analysis**.
+* **Upload de Múltiplos Formatos (Módulo 1):** O usuário não está mais restrito a colar texto. O Módulo de Diagnóstico agora aceita o **upload de arquivos** (`.pdf`, `.docx`, `.txt`), extraindo o texto automaticamente.
+* **Exportação para PDF (Módulo 6):** O Documento de Governança final, gerado no Módulo 6, pode ser **exportado como um arquivo PDF** com um único clique.
+* **Arquitetura de "Memória Dupla":**
+    * **Memória de Sessão:** (Clipboard) Passa dados automaticamente entre os módulos (M1 -> M2 -> M3...).
+    * **Memória de Longo Prazo:** (Google Sheets) Salva o trabalho de forma permanente para consulta e para alimentar a "Busca Inteligente".
+* **Arquitetura Flexível:** O usuário pode pular etapas e começar o fluxo de qualquer módulo (ex: colar um PDD direto no Módulo 4).
 
-### ✨ Funcionalidades Principais
-
-A ferramenta é dividida em um fluxo de trabalho principal de 6 etapas e um módulo de utilidade "fast-track".
-
-**Fluxo Principal:**
+### ⚙️ O Fluxo de Trabalho (Módulos)
 
 1.  **💡 1. Diagnóstico (AS-IS):**
-    * Analisa material bruto (atas de reunião, anotações, e-mails) e usa a I.A. para mapear o **Processo Atual (AS-IS)** e as **Regras de Negócio**, focando 100% no problema.
+    * Recebe anotações de reunião (via `st.text_area`) **OU** arquivos de requisitos do cliente (via `st.file_uploader`).
+    * A I.A. lê todo o material e gera o "Processo AS-IS" e as "Regras de Negócio".
 
 2.  **🧠 2. Arquitetura (Solução):**
-    * Pega o diagnóstico AS-IS e usa a I.A. para propor a **melhor arquitetura de solução unificada**, já focada no stack (Power Automate + Analysis) e com uma avaliação de **Impacto vs. Esforço** para cada fase.
+    * **Passo 1 (Busca Inteligente):** Compara o "AS-IS" com todos os projetos salvos no Google Sheets.
+    * **Passo 2 (Decisão):**
+        * **SE** encontrar um projeto similar, sugere a **reutilização** e gera o plano de adaptação. O usuário pode aceitar ou clicar em **"Gerar Arquitetura do Zero"** (override).
+        * **SE NÃO** encontrar, gera uma nova arquitetura do zero, focada em **Power Automate + Analysis**.
 
 3.  **✍️ 3. Design (TO-BE):**
-    * Recebe o AS-IS (para contexto) e a Arquitetura da Solução escolhida. A I.A. então gera o **PDD (Process Design Document)** detalhado, com o fluxo "To-Be" passo a passo e um plano robusto de tratamento de exceções.
+    * Gera o PDD (Process Design Document) completo.
+    * O PDD agora é dividido em `3.2.1. Fluxo de Orquestração (Power Automate)` e `3.2.2. Requisitos de Extração (Analysis)`.
 
 4.  **📄 4. Delivery (Docs):**
-    * Traduz o PDD em um **backlog de desenvolvimento Ágil completo**: Épico, Requisitos Funcionais, Requisitos Não Funcionais (NFRs), Histórias de Usuário e Critérios de Aceitação detalhados.
+    * Gera **todos os 5 artefatos de entrega**: Épico, Requisitos Funcionais (RFs), Requisitos Não Funcionais (NFRs), Histórias de Usuário (USs) e Critérios de Aceitação (CAs).
+    * As Histórias de Usuário são divididas por função (Power Automate vs. Analysis).
 
 5.  **🧪 5. QA & Testes:**
-    * Usa o mesmo PDD para gerar um **Plano de Testes (UAT)** profissional, cobrindo cenários de Caminho Feliz, Testes Negativos (dados inválidos) e Testes de Exceção (falhas de sistema).
+    * Gera o Plano de Testes (UAT) focado na stack (ex: "O que acontece se o Analysis tiver baixa confiança?" ou "E se o Power Automate não encontrar o seletor?").
 
 6.  **📜 6. Governança (Final):**
-    * O módulo final. O usuário cola os outputs dos Módulos 1, 3, 4 e 5. A I.A. então compila tudo em um **Documento de Governança Discovery-to-Delivery** único, padronizado e profissional, escrevendo automaticamente a "Declaração do Problema" com base nos inputs.
+    * Compila todos os inputs do fluxo em um Documento de Governança final, seguindo o template padrão (TFMC).
+    * Permite o **download imediato do documento em PDF**.
 
-**Módulo de Utilidade (Adaptação):**
-
-* **🔄 7. Refinar:**
-    * Um fluxo "fast-track" para adaptar um projeto existente. O usuário cola um PDD antigo e as novas regras de negócio (ex: novo fornecedor, novo sistema), e a I.A. gera uma **"Análise de Impacto"** detalhada das mudanças necessárias.
+7.  **🔄 7. Refinar:**
+    * Um fluxo "fast-track" (agora também usado pelo Módulo 2) para carregar um projeto antigo, descrever as mudanças (ex: "novo fornecedor") e gerar um **novo Documento de Governança completo e adaptado**, destacando as mudanças com `**[MUDANÇA]**`.
 
 ### 🛠️ Tecnologias Utilizadas
 
 * **Front-End:** Streamlit
-* **Back-End / I.A.:** Python, Google Generative AI (Gemini)
+* **Back-End / Lógica:** Python
+* **Inteligência:** Google Generative AI (Gemini)
+* **Armazenamento (Longo Prazo):** Google Sheets API (`gspread`)
+* **Processamento de Arquivos:** `pdfplumber`, `python-docx`
+* **Geração de PDF:** `fpdf2`, `markdown2`
 
 ### 🚀 Como Executar o Projeto Localmente
-
-Para rodar este projeto no seu computador, siga os passos abaixo:
 
 **1. Clone o Repositório:**
 ```bash
 git clone [https://github.com/raphaelsalgueiro/Automation-Architect-AI.git](https://github.com/raphaelsalgueiro/Automation-Architect-AI.git)
 cd Automation-Architect-AI
-```
-
-**2. Crie e Ative um Ambiente Virtual (Recomendado):**
-```bash
-python -m venv .venv
-# No Windows:
-.\.venv\Scripts\activate
-# No macOS/Linux:
-# source .venv/bin/activate
-```
-
-**3. Instale as Dependências:**
-```bash
-pip install -r requirements.txt
-```
-
-**4. Configure a Chave de API:**
-* Crie uma pasta chamada `.streamlit` na raiz do projeto.
-* Dentro dela, crie um arquivo chamado `secrets.toml`.
-* Adicione sua chave do Google AI neste arquivo, da seguinte forma:
-    ```toml
-    GOOGLE_API_KEY = "SUA_CHAVE_DE_API_VAI_AQUI"
-    ```
-
-**5. Execute o Aplicativo:**
-```bash
-streamlit run app.py
-```
