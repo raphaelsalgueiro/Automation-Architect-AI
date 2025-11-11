@@ -1,11 +1,44 @@
 import streamlit as st
 import google.generativeai as genai
 from datetime import datetime
+import os 
 
 from modules import M1_diagnostico, M2_brainstorm, M3_design, M4_delivery, M5_qa, M6_governance, M7_refine
 
 st.set_page_config(page_title="Automation Architect AI", page_icon="🤖", layout="wide")
-st.title("🤖 Automation Architect AI")
+
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOGO_PATH = os.path.join(BASE_DIR, "assets", "logo_da_empresa.png")
+
+
+col1, col2 = st.columns([1, 6], vertical_alignment="center", gap="small") 
+
+with col1:
+    if os.path.exists(LOGO_PATH):
+        st.image(LOGO_PATH, width=100) 
+    else:
+        st.error("Logo não encontrada!") 
+
+with col2:
+
+    st.markdown(
+        "<h1 style='margin-top: -20px; margin-bottom: 0px; margin-left: -20px;'>Automation Architect AI</h1>", 
+        unsafe_allow_html=True
+    )
+
+
+if 'clipboard' not in st.session_state:
+    st.session_state.clipboard = {
+        "diagnostico_asis": "",
+        "arquitetura_solucao": "",
+        "design_pdd": "",
+        "delivery_docs": "",
+        "qa_plano": "",
+        "governance_doc": "",
+        "refine_output": ""
+    }
 
 if 'current_date' not in st.session_state:
     st.session_state.current_date = datetime.now().strftime("%d/%m/%Y")
@@ -20,7 +53,6 @@ except Exception as e:
     st.error(f"Erro ao configurar a API do Google: {e}")
     st.stop()
 
-# --- NAVEGAÇÃO EM ABAS (Com Nomes Corrigidos) ---
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "💡 1. Diagnóstico (AS-IS)", 
     "🧠 2. Arquitetura (Solução)", 
