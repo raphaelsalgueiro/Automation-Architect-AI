@@ -31,9 +31,9 @@ def create_pdf_bytes(md_text):
         
         # --- INÍCIO DA CORREÇÃO ---
         # 5. Retornar os bytes
-        #    Removemos o 'dest="S"'. Chamando .output() sem argumentos
-        #    (ou com dest='B') retorna o formato 'bytes' que o st.download_button espera.
-        return pdf.output()
+        #    Convertemos explicitamente o 'bytearray' (de pdf.output()) 
+        #    para 'bytes', que é o que o st.download_button espera.
+        return bytes(pdf.output())
         # --- FIM DA CORREÇÃO ---
 
     except Exception as e:
