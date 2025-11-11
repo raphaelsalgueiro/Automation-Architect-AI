@@ -31,9 +31,9 @@ def create_pdf_bytes(md_text):
         
         # --- INÍCIO DA CORREÇÃO ---
         # 5. Retornar os bytes
-        #    Removemos o ".encode('latin-1')" que estava causando o erro.
-        #    O output(dest='S') já retorna os bytes necessários.
-        return pdf.output(dest='S')
+        #    Removemos o 'dest="S"'. Chamando .output() sem argumentos
+        #    (ou com dest='B') retorna o formato 'bytes' que o st.download_button espera.
+        return pdf.output()
         # --- FIM DA CORREÇÃO ---
 
     except Exception as e:
