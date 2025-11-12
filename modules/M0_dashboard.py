@@ -1,32 +1,27 @@
 import streamlit as st
 from utils.sheets_handler import load_from_sheet
 import pandas as pd
-import altair as alt # <-- Importamos o Altair
+import altair as alt 
 
 def run():
     st.header("📊 Dashboard de Projetos de Automação")
     st.write("Visão geral de todos os projetos registrados no Histórico.")
 
     try:
-        # 1. Carregar os dados (vem como lista de dicionários)
         records = load_from_sheet()
 
         if not records:
             st.info("Nenhum projeto encontrado no seu histórico. Salve um documento no Módulo 6 para começar.")
             st.stop()
         
-        # 2. Converter em DataFrame do Pandas para fácil análise
         df = pd.DataFrame(records)
 
-        # 3. Garantir que as colunas esperadas existam
         if 'Tipo_De_Documento' not in df.columns or 'Data' not in df.columns or 'Nome_Do_Projeto' not in df.columns:
             st.error("Erro: A planilha 'Historico_Automation_AI' não contém as colunas necessárias (Tipo_De_Documento, Data, Nome_Do_Projeto).")
             st.stop()
 
-        # --- Renderizar os KPIs ---
         st.subheader("Visão Geral do Pipeline")
         
-        # 4. Calcular KPIs
         total_projetos = len(df)
         projetos_concluidos = df[df['Tipo_De_Documento'] == 'Governança (Final)'].shape[0]
         projetos_rascunho = total_projetos - projetos_concluidos
@@ -38,14 +33,12 @@ def run():
 
         st.divider()
 
-        # --- INÍCIO DA MUDANÇA (Gráfico Altair) ---
         st.subheader("Distribuição de Documentos")
         
-        # 5. Calcular dados do gráfico
         chart_data = df['Tipo_De_Documento'].value_counts().reset_index()
         chart_data.columns = ['Tipo_De_Documento', 'Quantidade']
 
-        # 6. Definir a ordem lógica do funil (do início ao fim)
+
         order = [
             'Diagnóstico (AS-IS)', 
             'Arquitetura (Solução)', 
@@ -57,24 +50,22 @@ def run():
             'Refinamento (Análise de Impacto)'
         ]
 
-        # 7. Criar o gráfico Altair
         chart = alt.Chart(chart_data).mark_bar().encode(
-            # Eixo X: Ordenado pela nossa lista 'order'
+   
             x=alt.X('Tipo_De_Documento', sort=order),
-            # Eixo Y: Quantidade
+     
             y=alt.Y('Quantidade'),
-            # Cor: Uma cor diferente para cada tipo
-            color=alt.Color('Tipo_De_Documento', legend=None), # Remove a legenda de cor (redundante)
-            # Tooltip: O que aparece ao passar o mouse
+   
+            color=alt.Color('Tipo_De_Documento', legend=None), 
+  
             tooltip=['Tipo_De_Documento', 'Quantidade']
-        ).interactive() # Permite zoom e pan
+        ).interactive() # Permite zoom 
 
         st.altair_chart(chart, use_container_width=True)
-        # --- FIM DA MUDANÇA ---
+  
 
         st.divider()
 
-        # --- Renderizar a Tabela de Projetos Recentes ---
         st.subheader("Últimos Projetos Salvos")
         
         try:

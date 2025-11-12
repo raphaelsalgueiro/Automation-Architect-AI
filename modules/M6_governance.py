@@ -5,7 +5,7 @@ from utils.pdf_exporter import create_pdf_bytes  # <-- IMPORTAMOS O EXPORTADOR
 
 def run():
     st.header("📜 6. Governança (Final)")
-    st.write("O objetivo deste módulo é compilar automaticamente os outputs dos módulos anteriores em um único 'Documento de Governança Discovery-to-Delivery', seguindo o seu template padrão.")
+    st.write("O objetivo deste módulo é compilar automaticamente os outputs dos módulos anteriores em um único 'Documento de Governança Discovery-to-Delivery', seguindo o template padrão.")
 
     st.subheader("1. Metadados do Projeto")
     

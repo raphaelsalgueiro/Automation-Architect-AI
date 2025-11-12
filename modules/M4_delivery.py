@@ -4,14 +4,13 @@ from utils.sheets_handler import save_to_sheet
 
 def run():
     st.header("📄 4. Delivery (Docs)")
-    st.write("O objetivo deste módulo é traduzir o PDD em **todos** os artefatos técnicos (RFs, NFRs, USs, CAs) para a equipe de **Inovação**.")
+    st.write("O objetivo deste módulo é traduzir o PDD em **todos** os artefatos técnicos (RFs, NFRs, USs, CAs) para as equipes de **Power Automate** e **Analysis**.")
     
-
     pdd_input_widget_value = st.text_area(
         "3. Design (PDD)",
         height=300,
         placeholder="Gerado pelo Módulo 3 ou colado manualmente...",
-        key="delivery_pdd_input"  # Lê o valor que o M3 definiu para este 'key'
+        key="delivery_pdd_input" 
     )
 
     if st.button("Gerar Artefatos para Desenvolvimento"):
@@ -21,49 +20,52 @@ def run():
             
             with st.spinner("Gerando a documentação técnica detalhada..."):
                 
-                # --- PROMPT REFINADO (V3.0) ---
+                # --- PROMPT REFINADO (V4.2) ---
+                # Corrigida a numeração para continuar do PDD (3.3, 3.4...)
+                # Corrigida a formatação dos CAs (para bullet points)
                 prompt = f"""
                 Você é um Analista de Requisitos Ágil especialista em projetos **Power Automate** e **Analysis**.
                 Sua tarefa é traduzir o PDD (Process Design Document) em um conjunto completo de 5 artefatos de desenvolvimento.
 
-                Com base no PDD fornecido, gere os seguintes documentos:
-                
+                Gere os seguintes documentos, continuando a numeração do PDD. Comece com `3.3. Épico de Desenvolvimento`, `3.4. Requisitos Funcionais`, e assim por diante.
+
                 ---
-                ### 3.3. Épico de Desenvolvimento 
+                ### 3.3. Épico de Desenvolvimento
                 (Gere um Épico, Objetivo e Valor de Negócio, focado no que o Power Automate e o Analysis irão resolver) .
 
-                ### 3.X. Requisitos Funcionais (RFs)
-                [cite_start](Gere uma lista detalhada do que o sistema DEVE fazer. Ex: "RF-01: O sistema DEVE extrair os campos X, Y, Z do documento." ou "RF-02: O sistema DEVE classificar documentos entre FRS e RM" [cite: 88-91]).
+                ### 3.4. Requisitos Funcionais (RFs)
+                (Gere uma lista detalhada do que o sistema DEVE fazer. Ex: "RF-01: O sistema DEVE classificar documentos...") [cite_start][cite: 88-91].
 
-                ### 3.5. Requisitos Não-Funcionais (NFRs) 
-                (Sugira NFRs cruciais para esta automação).
-                Exemplos:
-                * NFR003 (Confiabilidade): "Retry de 3 tentativas para SAP e Unico Doc." 
-                * NFR004 (Segurança): "Credenciais via Cofre de Credenciais (Vault)." 
-                * NFR005 (Auditabilidade): "Log de todas as ações no Snowflake." 
+                ### 3.5. Requisitos Não Funcionais (NFRs)
+                (Sugira NFRs cruciais para esta automação, focados em Segurança, Confiabilidade, Auditoria, etc.) .
 
-                ### 3.4. Histórias de Usuário (Divididas por Função) 
+                ### 3.6. Histórias de Usuário (Divididas por Função) 
                 
-                #### Histórias de Usuário (Power Automate)
+                #### 3.6.1. Histórias de Usuário (Power Automate)
                 (Gere Histórias de Usuário técnicas no formato 'Como automação [Power Automate], eu quero...').
                 Exemplos:
-                * US-01: "...monitorar a caixa de entrada..." 
-                * US-06: "...processar dados que exigem Rateio... executando o script de input específico no SAP..." 
-                * US-09: "...acessar o Unico Doc (Oracle) e inserir os metadados..." 
+                * "...processar dados que exigem Rateio... executando o script de input específico no SAP..." 
+                * "...acessar o Unico Doc (Oracle) e inserir os metadados..." 
 
-                #### Histórias de Usuário (Analysis)
+                #### 3.6.2. Histórias de Usuário (Analysis)
                 (Gere Histórias de Usuário técnicas no formato 'Como Engenheiro de IA, eu quero...').
                 Exemplos:
-                * US-A1: "...configurar um agente do Analysis para extrair os campos X, Y, Z do Fornecedor B."
-                * US-A2: "...treinar o Analysis para classificar corretamente documentos entre 'CTE' e 'FRS'." 
+                * "...configurar um agente do Analysis para extrair os campos X, Y, Z."
+                * "...treinar o Analysis para classificar corretamente documentos entre 'CTE' e 'FRS'." 
 
-                ### 3.X. Critérios de Aceitação (CAs)
-                (Para as 2-3 Histórias de Usuário mais críticas, detalhe os CAs no formato 'Dado que... Quando... Então...').
-                Exemplo:
-                * **CA para US-09 (Integração Unico Doc):**
-                    * **Dado que** o Power Automate criou a FRS 12345 no SAP.
-                    * **Quando** o robô acessar o Unico Doc.
-                    * **Então** ele deve inserir "12345" no campo 'Número do Documento' e salvar o registro.
+                ### 3.7. Critérios de Aceitação (CAs)
+                (Para as Histórias de Usuário mais críticas, detalhe os CAs. **IMPORTANTE: Use listas (bullet points), NÃO use tabelas Markdown.**)
+                
+                Exemplo de Formato de CA (use este formato):
+                **CA para US-P3 (Workflow de Aprovação):**
+                * **Cenário 1: Limiar Ativado**
+                    * **Dado que** o Analysis retorna o `Valor Total` de R$ 50.000,01.
+                    * **Quando** o Power Automate aplica a validação R 2.1.1.
+                    * **Então** o fluxo DEVE iniciar o bloco `Power Automate Approvals` e pausar a execução.
+                * **Cenário 2: Limiar Desativado**
+                    * **Dado que** o Analysis retorna o `Valor Total` de R$ 49.999,99.
+                    * **Quando** o Power Automate aplica a validação R 2.1.1.
+                    * **Então** o fluxo DEVE ignorar o bloco `Power Automate Approvals` e seguir para a próxima etapa.
                 ---
                 
                 PDD para Análise:
@@ -92,7 +94,7 @@ def run():
         
         if st.button("Salvar", key="delivery_save_button"):
             if project_name_input:
-                with st.spinner("Salvando..."):
+                with st.spinner("Salvando na planilha..."):
                     success = save_to_sheet(
                         project_name=project_name_input, 
                         doc_type="Delivery (Artefatos)", 

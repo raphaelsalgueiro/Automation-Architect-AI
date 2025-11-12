@@ -52,9 +52,8 @@ except Exception as e:
     st.error(f"Erro ao configurar a API do Google: {e}")
     st.stop()
 
-# 2. ADICIONAMOS A "TAB 0" (DASHBOARD) NA FRENTE
 tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
-    "📊 Dashboard", # <-- A NOVA ABA
+    "📊 Dashboard", # A NOVA ABA
     "💡 1. Diagnóstico (AS-IS)", 
     "🧠 2. Arquitetura (Solução)", 
     "✍️ 3. Design (TO-BE)", 

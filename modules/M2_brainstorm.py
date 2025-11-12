@@ -72,7 +72,7 @@ def get_finder_prompt(as_is_input, client_request, historical_docs_string):
 
 def run():
     st.header("🧠 2. Arquitetura (Solução)")
-    st.write("O objetivo deste módulo é propor a melhor arquitetura de solução, usando **Power Automate** e **Analysis** (IA Interna). A ferramenta irá primeiro verificar seu histórico por projetos reaproveitáveis.")
+    st.write("O objetivo deste módulo é propor a melhor arquitetura de solução, usando **Power Automate** e **Analysis**. A ferramenta irá primeiro verificar seu histórico por projetos reaproveitáveis.")
 
     # Inicializa os estados da sessão para este módulo
     if 'm2_suggestion_made' not in st.session_state:
