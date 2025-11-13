@@ -81,7 +81,7 @@ def run():
         
         if st.button("Salvar", key="diag_save_button"):
             if project_name_input:
-                with st.spinner("Salvando na planilha..."):
+                with st.spinner("Salvando..."):
                     success = save_to_sheet(
                         project_name=project_name_input, 
                         doc_type="Diagnóstico (AS-IS)", 

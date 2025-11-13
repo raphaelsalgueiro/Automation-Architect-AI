@@ -6,14 +6,11 @@ def run():
     st.header("🧪 5. QA & Testes")
     st.write("O objetivo deste módulo é gerar um Plano de Testes (UAT) completo com base no PDD, focado em **Power Automate** e **Analysis**.")
 
-    # --- CORREÇÃO DO BUG/AVISO (V3.0) ---
-    # O 'value' foi removido. O widget agora lê seu estado do 'key'.
-    # O Módulo 3 (M3_design.py) é responsável por ATUALIZAR o 'st.session_state.qa_pdd_input'.
     pdd_input_widget_value = st.text_area(
         "3. Design (PDD)",
         height=300,
         placeholder="Gerado pelo Módulo 3 ou colado manualmente...",
-        key="qa_pdd_input" # Lê o valor que o M3 definiu para este 'key'
+        key="qa_pdd_input" 
     )
 
     if st.button("Gerar Cenários de Teste (UAT)"):
@@ -23,34 +20,29 @@ def run():
             
             with st.spinner("Elaborando o plano de testes..."):
                 
+                # --- INÍCIO DA ATUALIZAÇÃO (LIMPEZA DE CITAÇÃO V7.1) ---
                 prompt = f"""
-                Você é um Engenheiro de QA (Quality Assurance) Sênior, especialista em automação de processos com **Power Automate** e **Analysis**.
-                Sua tarefa é criar um plano de testes (UAT) com base no PDD (Fluxo 'To-Be'), seguindo a estrutura da Seção 4 do documento de governança .
+                Você é um Engenheiro de QA (Quality Assurance) Sênior, especialista em automação com **Power Automate** e **Analysis**.
+                Sua tarefa é criar um plano de testes (UAT) com base no PDD (Fluxo 'To-Be'), seguindo a estrutura da Seção 4 do documento de governança.
 
-                Crie uma lista de cenários de teste, divididos nas seguintes categorias:
+                **REGRAS DE FORMATAÇÃO CRÍTICAS:**
+                1.  **Tabelas Markdown:** Você DEVE usar Tabelas Markdown para estruturar todos os cenários de teste. NÃO use listas ou bullet points.
+                2.  **Estrutura:** Siga a estrutura de colunas do template OUROMAR (ID, CENÁRIO, OBJETIVO, CRITÉRIOS/RESULTADO).
+
+                Crie as seguintes seções:
 
                 ---
                 ### 4.1. Testes de Caminho Feliz (Happy Path) 
-                (Cenários onde tudo ocorre como esperado).
-                Exemplos:
-                * HP-01: "Criação de FRS Padrão (Sucesso E2E - Power Automate + Analysis + SAP + Unico Doc)" 
-                * HP-03: "Processamento em Lote Misto (Power Automate processa FRS e RM no mesmo ciclo)" 
-                * HP-04: "Tratamento de Rateio" 
+                (Gere uma tabela Markdown com: ID, CENÁRIO DE TESTE, OBJETIVO, CRITÉRIOS DE SUCESSO (E2E))
+                (Ex: HP-01: Processamento E2E Completo, HP-02: Consolidação de CTEs)
 
                 ### 4.2. Testes Negativos (Validação de Dados) 
-                (Cenários que testam o comportamento com dados inválidos ou ausentes).
-                Exemplos:
-                * NEG-01: "Dados Incompletos (Analysis não encontra campo 'Valor Total')" 
-                * NEG-02: "Validação de WBS Inválido" 
-                * NEG-03: "Anexo Corrompido (PDF ilegível pelo Analysis)" 
+                (Gere uma tabela Markdown com: ID, CENÁRIO DE TESTE, OBJETIVO, AÇÃO ESPERADA (RESULTADO))
+                (Ex: NEG-01: Anexo Corrompido, NEG-02: Dados Incompletos)
                 
                 ### 4.3. Testes de Exceção (Resiliência do Sistema) 
-                (Cenários que testam como o Power Automate lida com falhas).
-                Exemplos:
-                * EXC-01: "Baixa Confiança do Analysis (Abaixo de 80%)" 
-                * EXC-02: "Erro de Lançamento no SAP (Ex: WBS Bloqueado)" 
-                * EXC-03: "Falha de Integração com Unico Doc (Power Automate aplica Retry 3x e falha)" 
-                * EXC-04: "Falha de Login Crítica (Power Automate Desktop não consegue logar na VM/SAP)" 
+                (Gere uma tabela Markdown com: ID, CENÁRIO DE TESTE, OBJETIVO, FLUXO DE EXCEÇÃO ATIVADO)
+                (Ex: EXC-01: Baixa Confiança (Analysis), EXC-02: Erro de Lançamento no SAP)
                 ---
                 
                 Fluxo de Processo 'To-Be' para Análise:
@@ -58,6 +50,7 @@ def run():
                 {pdd_input_widget_value}
                 ---
                 """
+                # --- FIM DA ATUALIZAÇÃO ---
                 
                 response_text = call_gemini_api(prompt)
                 st.session_state.clipboard["qa_plano"] = response_text

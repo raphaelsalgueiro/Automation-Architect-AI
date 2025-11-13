@@ -20,52 +20,39 @@ def run():
             
             with st.spinner("Gerando a documentação técnica detalhada..."):
                 
-                # --- PROMPT REFINADO (V4.2) ---
-                # Corrigida a numeração para continuar do PDD (3.3, 3.4...)
-                # Corrigida a formatação dos CAs (para bullet points)
+                # --- INÍCIO DA ATUALIZAÇÃO (PROMPT V7.0) ---
+                # Força o uso de Tabelas Markdown para consistência
                 prompt = f"""
                 Você é um Analista de Requisitos Ágil especialista em projetos **Power Automate** e **Analysis**.
-                Sua tarefa é traduzir o PDD (Process Design Document) em um conjunto completo de 5 artefatos de desenvolvimento.
+                Sua tarefa é traduzir o PDD (Process Design Document) em um conjunto completo de 5 artefatos de desenvolvimento, formatados para clareza técnica.
 
-                Gere os seguintes documentos, continuando a numeração do PDD. Comece com `3.3. Épico de Desenvolvimento`, `3.4. Requisitos Funcionais`, e assim por diante.
+                **REGRAS DE FORMATAÇÃO CRÍTICAS:**
+                1.  **Numeração:** Continue a numeração do PDD. Comece EXATAMENTE com `### 3.3. Épico de Desenvolvimento`, `### 3.4. Requisitos Funcionais`, e assim por diante.
+                2.  **Tabelas Markdown:** Para os Requisitos (RFs, NFRs), Histórias de Usuário (USs) e Critérios de Aceitação (CAs), use **Tabelas Markdown** para estruturar os dados. NÃO use listas ou bullet points para estes itens.
+
+                Gere os seguintes documentos (baseado no template OUROMAR ):
 
                 ---
                 ### 3.3. Épico de Desenvolvimento
-                (Gere um Épico, Objetivo e Valor de Negócio, focado no que o Power Automate e o Analysis irão resolver) .
+                (Gere uma tabela Markdown com: Título do Épico, Objetivo, Valor de Negócio, Escopo (In-Scope)) [cite: 180]
 
                 ### 3.4. Requisitos Funcionais (RFs)
-                (Gere uma lista detalhada do que o sistema DEVE fazer. Ex: "RF-01: O sistema DEVE classificar documentos...") [cite_start][cite: 88-91].
+                (Gere uma tabela Markdown com: ID, REQUISITO FUNCIONAL. Agrupe-os por função, ex: "RFs de Coleta", "RFs de Extração") [cite: 183-192]
 
                 ### 3.5. Requisitos Não Funcionais (NFRs)
-                (Sugira NFRs cruciais para esta automação, focados em Segurança, Confiabilidade, Auditoria, etc.) .
+                (Gere uma tabela Markdown com: ID, CATEGORIA, REQUISITO NÃO-FUNCIONAL) [cite: 194]
 
                 ### 3.6. Histórias de Usuário (Divididas por Função) 
                 
                 #### 3.6.1. Histórias de Usuário (Power Automate)
-                (Gere Histórias de Usuário técnicas no formato 'Como automação [Power Automate], eu quero...').
-                Exemplos:
-                * "...processar dados que exigem Rateio... executando o script de input específico no SAP..." 
-                * "...acessar o Unico Doc (Oracle) e inserir os metadados..." 
+                (Gere uma tabela Markdown com: ID, História de Usuário (Power Automate)) [cite: 201]
 
                 #### 3.6.2. Histórias de Usuário (Analysis)
-                (Gere Histórias de Usuário técnicas no formato 'Como Engenheiro de IA, eu quero...').
-                Exemplos:
-                * "...configurar um agente do Analysis para extrair os campos X, Y, Z."
-                * "...treinar o Analysis para classificar corretamente documentos entre 'CTE' e 'FRS'." 
+                (Gere uma tabela Markdown com: ID, História de Usuário (Analysis)) [cite: 206]
 
                 ### 3.7. Critérios de Aceitação (CAs)
-                (Para as Histórias de Usuário mais críticas, detalhe os CAs. **IMPORTANTE: Use listas (bullet points), NÃO use tabelas Markdown.**)
-                
-                Exemplo de Formato de CA (use este formato):
-                **CA para US-P3 (Workflow de Aprovação):**
-                * **Cenário 1: Limiar Ativado**
-                    * **Dado que** o Analysis retorna o `Valor Total` de R$ 50.000,01.
-                    * **Quando** o Power Automate aplica a validação R 2.1.1.
-                    * **Então** o fluxo DEVE iniciar o bloco `Power Automate Approvals` e pausar a execução.
-                * **Cenário 2: Limiar Desativado**
-                    * **Dado que** o Analysis retorna o `Valor Total` de R$ 49.999,99.
-                    * **Quando** o Power Automate aplica a validação R 2.1.1.
-                    * **Então** o fluxo DEVE ignorar o bloco `Power Automate Approvals` e seguir para a próxima etapa.
+                (Gere uma tabela Markdown para os CAs mais críticos. Ex: CA para US-P4)
+                (Use o formato de tabela: Condição (Dado que...), Ação (Quando...), Resultado (Então...)) [cite: 210]
                 ---
                 
                 PDD para Análise:
@@ -73,6 +60,7 @@ def run():
                 {pdd_input_widget_value}
                 ---
                 """
+                # --- FIM DA ATUALIZAÇÃO ---
                 
                 response_text = call_gemini_api(prompt)
                 st.session_state.clipboard["delivery_docs"] = response_text
@@ -94,7 +82,7 @@ def run():
         
         if st.button("Salvar", key="delivery_save_button"):
             if project_name_input:
-                with st.spinner("Salvando na planilha..."):
+                with st.spinner("Salvando..."):
                     success = save_to_sheet(
                         project_name=project_name_input, 
                         doc_type="Delivery (Artefatos)", 
