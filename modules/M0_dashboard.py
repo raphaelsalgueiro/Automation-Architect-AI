@@ -47,22 +47,22 @@ def run():
             'QA (Plano de Testes)', 
             'Governança (Final)',
             'Governança (Adaptado)',
-            'Refinamento (Análise de Impacto)'
+            'Refinamento (Análise de Impacto)' # Este é um tipo de documento antigo? Se não, remover.
         ]
 
         chart = alt.Chart(chart_data).mark_bar().encode(
-   
+    
             x=alt.X('Tipo_De_Documento', sort=order),
-     
+    
             y=alt.Y('Quantidade'),
-   
+    
             color=alt.Color('Tipo_De_Documento', legend=None), 
-  
+ 
             tooltip=['Tipo_De_Documento', 'Quantidade']
-        ).interactive() # Permite zoom 
+        ).interactive() 
 
         st.altair_chart(chart, use_container_width=True)
-  
+ 
 
         st.divider()
 
@@ -78,7 +78,6 @@ def run():
             df_recent[['Data', 'Nome_Do_Projeto', 'Tipo_De_Documento']],
             use_container_width=True,
             hide_index=True,
-            # Configuração para formatar a data de volta para o padrão Brasil
             column_config={
                 "Data": st.column_config.DatetimeColumn(
                     "Data",
@@ -86,6 +85,43 @@ def run():
                 )
             }
         )
+        
+        # --- INÍCIO DA ATUALIZAÇÃO (VISUALIZADOR DE HISTÓRICO) ---
+        st.divider()
+        st.subheader("Consultar Histórico de Documentos")
+        st.write("Selecione um projeto salvo para visualizar o conteúdo gerado.")
+
+        # Reusa os 'records' carregados no início da página
+        project_names = [
+            f"{r['Nome_Do_Projeto']} ({r['Tipo_De_Documento']}) - {r['Data']}" 
+            for r in reversed(records) # Inverte para mostrar os mais novos primeiro
+        ]
+        
+        selected_project_name = st.selectbox(
+            "Selecione um projeto para consultar:", 
+            options=project_names,
+            index=None, 
+            placeholder="Selecione um projeto da lista...", 
+            key="dashboard_select_project"
+        )
+
+        if selected_project_name: 
+            # Encontra o registro completo
+            selected_record = next(
+                r for r in reversed(records) if f"{r['Nome_Do_Projeto']} ({r['Tipo_De_Documento']}) - {r['Data']}" == selected_project_name
+            )
+            
+            content = selected_record.get('Conteudo_Gerado', 'Erro: Conteúdo não encontrado.')
+
+            # Lógica de limpeza (igual ao M7) para mostrar apenas o documento limpo
+            if "---DOCUMENTO-LIMPO---" in content:
+                content = content.split("---DOCUMENTO-LIMPO---", 1)[1].strip()
+            elif "---ARQUITETURA-LIMPA---" in content:
+                 content = content.split("---ARQUITETURA-LIMPA---", 1)[1].strip()
+
+            st.markdown(content)
+            st.code(content, language="markdown")
+        # --- FIM DA ATUALIZAÇÃO ---
 
     except Exception as e:
         st.error(f"Erro ao carregar o dashboard: {e}")

@@ -7,6 +7,14 @@ def run():
     st.header("📜 6. Governança (Final)")
     st.write("O objetivo deste módulo é compilar automaticamente os outputs dos módulos anteriores em um único 'Documento de Governança Discovery-to-Delivery', seguindo o template padrão.")
 
+    # --- INÍCIO DA ATUALIZAÇÃO (CORREÇÃO DE LAYOUT) ---
+    # Inicializa as flags de estado para o fluxo de Salvar/Exportar
+    if 'gov_save_success' not in st.session_state:
+        st.session_state.gov_save_success = False
+    if 'clear_gov_name' not in st.session_state:
+        st.session_state.clear_gov_name = False
+    # --- FIM DA ATUALIZAÇÃO ---
+
     st.subheader("1. Metadados do Projeto")
     
     col1, col2, col3 = st.columns(3)
@@ -59,7 +67,10 @@ def run():
         if not all([doc1_asis, doc2_design, doc3_delivery, doc4_qa, project_name, client_name, stakeholders_input]):
             st.error("ERRO: Preencha todos os 5 campos (Metadados e Componentes) antes de gerar o documento.")
         else:
-            # Atualiza o clipboard caso o usuário tenha colado manualmente
+            # Reseta as flags ao gerar um novo documento
+            st.session_state.gov_save_success = False
+            st.session_state.clear_gov_name = True
+
             st.session_state.clipboard["diagnostico_asis"] = doc1_asis
             st.session_state.clipboard["design_pdd"] = doc2_design
             st.session_state.clipboard["delivery_docs"] = doc3_delivery
@@ -69,7 +80,6 @@ def run():
                 
                 current_date = st.session_state.get('current_date', 'Data não definida')
                 
-                # --- INÍCIO DA ATUALIZAÇÃO (LIMPEZA DE CITAÇÃO V7.1) ---
                 prompt = f"""
                 Você é o "Redator Final" de Governança de Projetos da DMS Logistics.
                 Sua tarefa é **ESCREVER** um "Documento de Governança Discovery-to-Delivery" completo e profissional.
@@ -154,7 +164,6 @@ def run():
                 (Fim do Documento)
                 ---
                 """
-                # --- FIM DA ATUALIZAÇÃO ---
                 
                 response_text = call_gemini_api(prompt)
                 st.session_state.clipboard["governance_doc"] = response_text
@@ -166,44 +175,57 @@ def run():
         governance_doc_markdown = st.session_state.clipboard["governance_doc"]
         
         st.markdown(governance_doc_markdown)
-        
         st.code(governance_doc_markdown, language="markdown")
         st.info("Use o botão no canto superior direito do bloco acima para copiar todo o texto.")
         
+        # --- INÍCIO DA ATUALIZAÇÃO (LAYOUT V9.0) ---
         st.divider()
-        st.subheader("Exportar Documento")
+        st.subheader("Salvar ou Exportar este Documento")
 
-        pdf_file_name = f"{project_name.replace(' ', '_') if project_name else 'Documento_Governança'}.pdf"
-        
-        pdf_bytes = create_pdf_bytes(governance_doc_markdown)
-        
-        if pdf_bytes:
-            st.download_button(
-                label="Exportar para PDF",
-                data=pdf_bytes,
-                file_name=pdf_file_name,
-                mime="application/pdf"
-            )
-        
-        st.divider()
-        st.subheader("Salvar este Documento de Governança")
+        # Verifica a flag ANTES de desenhar o widget
+        if st.session_state.get("clear_gov_name", False):
+            st.session_state.gov_project_name = ""  # Limpa o valor (permitido aqui)
+            st.session_state.clear_gov_name = False # Reseta a flag
+
         project_name_input = st.text_input(
-            "Dê um nome para este Documento Final:", 
+            "1. Dê um nome para este Documento Final:", 
             placeholder="Ex: Doc Governança - Faturas Fornecedor X",
             key="gov_project_name"
         )
         
-        if st.button("Salvar", key="gov_save_button"):
-            if project_name_input:
-                with st.spinner("Salvando..."):
-                    success = save_to_sheet(
-                        project_name=project_name_input, 
-                        doc_type="Governança (Final)", 
-                        content=governance_doc_markdown 
+        col1_act, col2_act = st.columns([1, 1]) # 50% / 50%
+        
+        with col1_act: # Bloco de Ação na Esquerda
+            if st.button("2. Salvar", key="gov_save_button"):
+                if st.session_state.gov_project_name:
+                    with st.spinner("Salvando..."):
+                        success = save_to_sheet(
+                            project_name=st.session_state.gov_project_name, 
+                            doc_type="Governança (Final)", 
+                            content=governance_doc_markdown 
+                        )
+                        if success:
+                            st.success(f"Documento '{st.session_state.gov_project_name}' salvo com sucesso!")
+                            st.session_state.gov_save_success = True
+                        else:
+                            st.error("Falha ao salvar o projeto.")
+                            st.session_state.gov_save_success = False
+                else:
+                    st.warning("Por favor, dê um nome ao projeto para salvá-lo.")
+                    st.session_state.gov_save_success = False
+
+            # Mostra o botão Exportar logo abaixo do Salvar, mas só após o sucesso
+            if st.session_state.gov_save_success and st.session_state.gov_project_name:
+                pdf_file_name = f"{st.session_state.gov_project_name.replace(' ', '_')}.pdf"
+                pdf_bytes = create_pdf_bytes(governance_doc_markdown)
+                
+                if pdf_bytes:
+                    st.download_button(
+                        label="3. Exportar para PDF",
+                        data=pdf_bytes,
+                        file_name=pdf_file_name,
+                        mime="application/pdf"
                     )
-                    if success:
-                        st.success(f"Documento '{project_name_input}' salvo com sucesso!")
-                    else:
-                        st.error("Falha ao salvar o projeto.")
-            else:
-                st.warning("Por favor, dê um nome ao projeto para salvá-lo.")
+        
+        # col2_act fica intencionalmente vazia
+        # --- FIM DA ATUALIZAÇÃO ---
