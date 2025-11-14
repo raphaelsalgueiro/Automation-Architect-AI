@@ -1,66 +1,66 @@
-# 🤖 Automation Architect AI (v5.0)
+# 🤖 Automation Architect AI (v7.1)
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://automation-architect-ai-emhu7fwq2hpyzs447qkep5.streamlit.app/)
+> Um co-piloto de I.A. para Gestores de Projeto de TI, focado em acelerar o fluxo de trabalho de documentação de "Discovery" até o "Delivery".
 
-Uma ferramenta de I.A. (co-piloto) para Gestores de Projetos, Analistas de Requisitos e Desenvolvedores de Automação, especializada em acelerar o ciclo de vida "Discovery-to-Delivery" para a stack de **Power Automate** e **Analysis** (IA interna).
+Este projeto, desenvolvido em Python e Streamlit, atua como uma ferramenta interna para a equipe de TI, automatizando a criação de toda a documentação de governança de projetos. A ferramenta é especializada em gerar soluções focadas na stack de **Power Automate (Cloud e Desktop)** e na ferramenta interna de IA, **"Analysis"**.
 
 ---
 
-### ✨ Funcionalidades Principais (v5.0)
+## 🏛️ Arquitetura Principal
 
-Esta ferramenta evoluiu de um simples gerador de documentos para um assistente inteligente com memória de longo prazo e capacidade de visualização de dados.
+A ferramenta é construída sobre dois conceitos-chave:
 
-* **Página Inicial (Dashboard de Projetos):** A ferramenta agora abre em um dashboard (Módulo 0) que lê o histórico do Google Sheets e exibe KPIs gerenciais (Total de Projetos, Concluídos) e um gráfico de distribuição (via Altair).
-* **Busca Inteligente no Histórico (Módulo 2):** Ao invés de sempre criar do zero, a ferramenta agora **verifica o histórico** por projetos similares. Se encontrar uma automação compatível, ela sugere a **reutilização**, gerando um plano de adaptação.
-* **Geração de Backlog por Função (Módulo 4):** A ferramenta gera Histórias de Usuário separadas para o **Desenvolvedor Power Automate** e para o **Engenheiro do Analysis**, com numeração lógica e sequencial (corrigido na v4.2).
-* **Upload de Múltiplos Formatos (Módulo 1):** O usuário pode **colar texto** ou fazer **upload de arquivos** (`.pdf`, `.docx`, `.txt`), e a ferramenta combina os inputs para a IA.
-* **Exportação para PDF (Módulo 6):** O Documento de Governança final pode ser **exportado como um arquivo PDF** (estável, 100% Python via `fpdf2`).
-* **Arquitetura de "Memória Dupla":**
-    * **Memória de Sessão:** (Clipboard) Passa dados automaticamente entre os módulos.
-    * **Memória de Longo Prazo:** (Google Sheets) Salva o trabalho para alimentar o Dashboard e a "Busca Inteligente".
-* **Arquitetura Flexível:** O usuário pode pular etapas e começar o fluxo de qualquer módulo (ex: colar um PDD direto no Módulo 4).
+1.  **"Memória Dupla":**
+    * **Curto Prazo (Clipboard):** Um dicionário Python (`st.session_state.clipboard`) que passa automaticamente os dados gerados entre os módulos (ex: o Diagnóstico do M1 é usado pelo M2, que gera a Arquitetura usada pelo M3).
+    * **Longo Prazo (Histórico):** Uma planilha Google Sheets atua como nosso banco de dados permanente, salvando todos os artefatos e permitindo a reutilização inteligente de projetos.
 
-### ⚙️ O Fluxo de Trabalho (Módulos)
+2.  **"Arquitetura Flexível":**
+    * O usuário não é forçado a um fluxo linear. Ele pode pular diretamente para qualquer módulo (ex: Módulo 3), colar seu próprio texto (`st.text_area`) e a ferramenta funcionará a partir daquele ponto.
 
-1.  **📊 0. Dashboard:**
-    * A "página inicial" da aplicação. Mostra KPIs e gráficos baseados no histórico do Google Sheets.
+## ✨ Funcionalidades (Módulos)
 
-2.  **💡 1. Diagnóstico (AS-IS):**
-    * Recebe anotações (texto) ou arquivos (`.pdf`, `.docx`). A IA lê tudo e gera o "Processo AS-IS".
+A aplicação é dividida em 8 abas principais:
 
-3.  **🧠 2. Arquitetura (Solução):**
-    * **Passo 1 (Busca Inteligente):** Compara o "AS-IS" com o histórico do Google Sheets.
-    * **Passo 2 (Decisão):**
-        * **SE** encontrar um projeto similar, sugere a **reutilização**.
-        * **SE NÃO** encontrar, gera uma nova arquitetura (Power Automate + Analysis).
-        * O usuário sempre tem o botão **"Gerar Arquitetura do Zero"** (override).
+* **📊 Módulo 0: Dashboard**
+    * A página inicial. Lê o histórico do Google Sheets e exibe KPIs (Total de Projetos, Concluídos) usando `st.metric` e um gráfico de barras (`altair`) com a distribuição de documentos.
 
-4.  **✍️ 3. Design (TO-BE):**
-    * Gera o PDD (Process Design Document) 100% em **texto**, com seções claras para o `Fluxo de Orquestração (Power Automate)` e os `Requisitos de Extração (Analysis)`.
+* **💡 Módulo 1: Diagnóstico (AS-IS)**
+    * Recebe o "material bruto" do cliente através de um `st.text_area` (para anotações) ou `st.file_uploader` (para .pdf, .docx, .txt).
+    * Usa a IA para gerar o "Mapeamento AS-IS" e as "Regras de Negócio" (Seção 2 do documento final).
 
-5.  **📄 4. Delivery (Docs):**
-    * Gera **todos os 5 artefatos de entrega** (Épico, RFs, NFRs, USs, CAs) em uma **sequência numérica lógica e corrigida (v4.2)**.
+* **🧠 Módulo 2: Arquitetura (Solução)**
+    * O "cérebro" da aplicação. Ao receber o AS-IS, ele primeiro lê o histórico do Google Sheets.
+    * A IA decide entre `[REUTILIZAR]` (se encontrar um projeto similar) ou `[NOVO]`.
+    * Se `[REUTILIZAR]`, gera uma Análise de Impacto (para o usuário) e uma Arquitetura Limpa (para o clipboard), separando o contexto da solução final.
+    * Se `[NOVO]`, gera uma arquitetura do zero, dividindo tarefas entre "Analysis" e "Power Automate".
 
-6.  **🧪 5. QA & Testes:**
-    * Gera o Plano de Testes (UAT) focado na stack (Exceções do Analysis, falhas de UI do Power Automate).
+* **✍️ Módulo 3: Design (TO-BE)**
+    * Recebe a "Arquitetura Limpa" do M2 e a detalha em um PDD (Process Design Document) completo, focado em texto, com o fluxo TO-BE e as responsabilidades (Seções 3.1 e 3.2 do documento final).
 
-7.  **📜 6. Governança (Final):**
-    * Compila os 4 artefatos em um Documento de Governança final (baseado no template TFMC).
-    * Permite o **download imediato do documento em PDF**.
+* **📄 Módulo 4: Delivery (Docs)**
+    * Traduz o PDD do M3 em todos os 5 artefatos técnicos, formatados em **Tabelas Markdown** para clareza: Épico, Requisitos Funcionais (RFs), Requisitos Não Funcionais (NFRs), Histórias de Usuário (USs) e Critérios de Aceitação (CAs) (Seções 3.3 a 3.7).
 
-8.  **🔄 7. Refinar:**
-    * Fluxo "fast-track" para carregar um projeto antigo, descrever mudanças e gerar um novo Documento de Governança adaptado (em texto), destacando as `**[MUDANÇAS]**`.
+* **🧪 Módulo 5: QA & Testes**
+    * Lê o PDD e gera um Plano de Testes (UAT) completo, dividido em Happy Path, Testes Negativos e Testes de Exceção, formatados em **Tabelas Markdown** (Seção 4).
 
-### 🛠️ Tecnologias Utilizadas
+* **📜 Módulo 6: Governança (Final)**
+    * O "Redator Inteligente". Este módulo recebe os outputs limpos de todos os módulos anteriores (M1, M3, M4, M5).
+    * Ele usa um "esqueleto fixo" baseado no template padrão (OUROMAR) e **escreve** o documento de governança final e profissional, encaixando o contexto nas seções corretas.
+    * Permite a exportação do documento final para PDF usando `fpdf2`.
 
-* **Front-End:** Streamlit
-* **Visualização:** Altair (para o Dashboard)
-* **Back-End / Lógica:** Python
-* **Inteligência:** Google Generative AI (Gemini)
-* **Armazenamento (Longo Prazo):** Google Sheets API (`gspread`)
-* **Processamento de Arquivos:** `pdfplumber`, `python-docx`
-* **Geração de PDF:** `fpdf2`, `markdown2`
+* **🔄 Módulo 7: Refinar**
+    * Um fluxo "fast-track" que permite ao usuário carregar qualquer projeto do histórico, descrever as mudanças, e gerar um novo documento de governança adaptado.
 
-### 🚀 Como Executar o Projeto Localmente
+---
 
-**1. Clone o Repositório:**
+## 🛠️ Stack Tecnológica
+
+O projeto utiliza as seguintes bibliotecas (conforme `requirements.txt`):
+
+* **Front-End:** `streamlit`
+* **IA Generativa:** `google-generativeai`
+* **Base de Dados:** `gspread` (para Google Sheets)
+* **Gráficos:** `altair`
+* **Leitura de Arquivos:** `pdfplumber`, `python-docx`
+* **Exportação de PDF:** `fpdf2`
+* **Utilitários:** `markdown2`
